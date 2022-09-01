@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fff3e85c88ff63a1b99f51b2277d5ae0",
+    "content-hash": "35463ad3f8463354d45e874bb2f5bed7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -724,6 +724,107 @@
             "time": "2022-08-28T20:15:36+00:00"
         },
         {
+            "name": "eventsauce/message-repository-for-illuminate",
+            "version": "0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/MessageRepositoryForIlluminate.git",
+                "reference": "13b9e94dcdcb62feb9f8714db6ebadf214cdcae0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/MessageRepositoryForIlluminate/zipball/13b9e94dcdcb62feb9f8714db6ebadf214cdcae0",
+                "reference": "13b9e94dcdcb62feb9f8714db6ebadf214cdcae0",
+                "shasum": ""
+            },
+            "require": {
+                "eventsauce/eventsauce": "^1.0||^2.0||^3.0",
+                "eventsauce/message-repository-table-schema": "^0.2||^0.3||^0.4",
+                "eventsauce/uuid-encoding": "^0.2||^0.3||^0.4",
+                "illuminate/database": "^8.35||^9.0.0",
+                "ramsey/uuid": "^4.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\MessageRepository\\IlluminateMessageRepository\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Message Repository for Illuminate",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/MessageRepositoryForIlluminate/tree/0.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-28T21:13:20+00:00"
+        },
+        {
+            "name": "eventsauce/message-repository-table-schema",
+            "version": "0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/MessageRepositoryTableSchema.git",
+                "reference": "a75f7af16c494b31740ce21fe803c60b2451e274"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/MessageRepositoryTableSchema/zipball/a75f7af16c494b31740ce21fe803c60b2451e274",
+                "reference": "a75f7af16c494b31740ce21fe803c60b2451e274",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\MessageRepository\\TableSchema\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "Message Repository Table Schema",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/MessageRepositoryTableSchema/tree/0.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-28T21:13:20+00:00"
+        },
+        {
             "name": "eventsauce/object-hydrator",
             "version": "0.5.2",
             "source": {
@@ -786,6 +887,56 @@
                 }
             ],
             "time": "2022-08-22T15:03:15+00:00"
+        },
+        {
+            "name": "eventsauce/uuid-encoding",
+            "version": "0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/EventSaucePHP/UuidEncoding.git",
+                "reference": "5c05e9c8c455a63c4eee0de28a50e4ef77634cae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/EventSaucePHP/UuidEncoding/zipball/5c05e9c8c455a63c4eee0de28a50e4ef77634cae",
+                "reference": "5c05e9c8c455a63c4eee0de28a50e4ef77634cae",
+                "shasum": ""
+            },
+            "require": {
+                "ramsey/uuid": "^4.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "EventSauce\\UuidEncoding\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frankdejonge.nl"
+                }
+            ],
+            "description": "UUID encoding utility",
+            "support": {
+                "source": "https://github.com/EventSaucePHP/UuidEncoding/tree/0.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/frankdejonge",
+                    "type": "github"
+                }
+            ],
+            "time": "2022-08-28T21:13:20+00:00"
         },
         {
             "name": "fruitcake/php-cors",
