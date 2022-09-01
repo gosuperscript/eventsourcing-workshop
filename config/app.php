@@ -185,7 +185,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        \Workshop\Domains\Wallet\WalletServiceProvider::class,
         /*
          * Application Service Providers...
          */
