@@ -18,21 +18,6 @@ final class Account
         $this->id = $state->accountId;
     }
 
-    public static function fromState(AccountState $state): self
-    {
-        return new self($state);
-    }
-
-    public function getState(): AccountState
-    {
-        return $this->state;
-    }
-
-    public function getUnpublishedEvents(): array
-    {
-        return $this->unpublishedEvents;
-    }
-
     public static function open(Commands\OpenAccount $openAccount): self
     {
         $account = new self(new AccountState($openAccount->accountId));
@@ -63,5 +48,20 @@ final class Account
     private function publish(object $event)
     {
         $this->unpublishedEvents[] = $event;
+    }
+
+    public static function fromState(AccountState $state): self
+    {
+        return new self($state);
+    }
+
+    public function getState(): AccountState
+    {
+        return $this->state;
+    }
+
+    public function getUnpublishedEvents(): array
+    {
+        return $this->unpublishedEvents;
     }
 }
