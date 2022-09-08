@@ -23,6 +23,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
+    Route::get('wallets', \App\Http\Livewire\Wallets::class)->name('wallets');
     Route::get('transactions/{walletId}', \App\Http\Livewire\Transactions::class)->name('transactions');
     Route::get('/dashboard', function () {
         return view('dashboard');
