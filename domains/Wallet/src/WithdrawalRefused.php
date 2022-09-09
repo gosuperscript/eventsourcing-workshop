@@ -4,7 +4,7 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\Serialization\SerializablePayload;
 
-class TokensDeposited implements SerializablePayload
+class WithdrawalRefused implements SerializablePayload
 {
     private int $amountOfTokens;
 
@@ -21,10 +21,5 @@ class TokensDeposited implements SerializablePayload
     public static function fromPayload(array $payload): static
     {
         return new self($payload['amountOfTokens']);
-    }
-
-    public function tokens(): int
-    {
-        return $this->amountOfTokens;
     }
 }

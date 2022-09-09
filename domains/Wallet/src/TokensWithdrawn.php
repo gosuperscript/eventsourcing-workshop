@@ -4,7 +4,7 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\Serialization\SerializablePayload;
 
-class TokensDeposited implements SerializablePayload
+class TokensWithdrawn implements SerializablePayload
 {
     private int $amountOfTokens;
 
