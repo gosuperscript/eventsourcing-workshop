@@ -22,7 +22,6 @@ class WalletServiceProvider extends ServiceProvider
 
     public function register()
     {
-        // This should live in a config file.
         $classNameInflector = new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
 
         $this->app->bind(WalletMessageRepository::class, function (Application $application) use ($classNameInflector) {
