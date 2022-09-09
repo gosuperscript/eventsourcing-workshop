@@ -2,6 +2,7 @@
 
 namespace Workshop\Domains\Wallet\Tests;
 
+use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\TokensDeposited;
 use Workshop\Domains\Wallet\TokensWithdrawn;
 use Workshop\Domains\Wallet\Wallet;
@@ -30,6 +31,7 @@ class WithdrawTokensTest extends WalletTestCase
     {
         $this->given(new TokensDeposited(100))
             ->when(fn(Wallet $wallet) => $wallet->withdraw(50) & $wallet->withdraw(50) & $wallet->withdraw(1))
-            ->then(new TokensWithdrawn(50), new TokensWithdrawn(50), new WithdrawalRefused(1));
+            ->then(new TokensWithdrawn(50), new TokensWithdrawn(50), new WithdrawalRefused(1))
+            ->expectToFail(SorryCantWithdraw::becauseOfInsufficientBalance(0, 1));
     }
 }

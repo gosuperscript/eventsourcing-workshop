@@ -14,8 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('wallet_messages', function (Blueprint $table) {
-            $table->bigInteger('id')->primary();
-            $table->uuid('event_id');
+            $table->uuid('event_id')->primary();
             $table->uuid('aggregate_root_id');
             $table->integer('version');
             $table->text('payload');

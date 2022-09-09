@@ -4,6 +4,7 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\AggregateRoot;
 use EventSauce\EventSourcing\AggregateRootBehaviour;
+use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 
 class Wallet implements AggregateRoot
 {
@@ -18,11 +19,16 @@ class Wallet implements AggregateRoot
 
     public function withdraw(int $amountOfTokens): void
     {
-        $this->recordThat(
-            $amountOfTokens > $this->balance
-                ? new WithdrawalRefused($amountOfTokens)
-                : new TokensWithdrawn($amountOfTokens)
-        );
+        if ($amountOfTokens > $this->balance) {
+            $this->recordThat(
+                new WithdrawalRefused($amountOfTokens)
+            );
+            throw SorryCantWithdraw::becauseOfInsufficientBalance($this->balance, $amountOfTokens);
+        } else {
+            $this->recordThat(
+                new TokensWithdrawn($amountOfTokens)
+            );
+        }
     }
 
     protected function applyTokensDeposited(TokensDeposited $event): void
