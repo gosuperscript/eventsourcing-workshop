@@ -4,6 +4,8 @@ namespace Workshop\Domains\Wallet\Tests;
 
 use EventSauce\EventSourcing\AggregateRoot;
 use EventSauce\EventSourcing\AggregateRootId;
+use EventSauce\EventSourcing\MessageDispatcher;
+use EventSauce\EventSourcing\SynchronousMessageDispatcher;
 use EventSauce\EventSourcing\TestUtilities\AggregateRootTestCase;
 use Workshop\Domains\Wallet\Wallet;
 use Workshop\Domains\Wallet\WalletId;
@@ -32,6 +34,11 @@ abstract class WalletTestCase extends AggregateRootTestCase
         } finally {
             $this->repository->persist($wallet);
         }
+    }
+
+    protected function messageDispatcher(): MessageDispatcher
+    {
+        return new SynchronousMessageDispatcher();
     }
 
 }
