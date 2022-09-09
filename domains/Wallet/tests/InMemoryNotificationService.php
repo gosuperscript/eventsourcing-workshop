@@ -17,6 +17,6 @@ class InMemoryNotificationService implements NotificationService
 
     public function notificationSendExactlyOnceForWallet(WalletId $walletId): bool
     {
-        return count(array_keys($this->notifications, $walletId->toString())) === 0;
+        return count(array_keys($this->notifications, $walletId->toString())) === 1;
     }
 }
