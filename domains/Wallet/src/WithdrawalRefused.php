@@ -2,9 +2,7 @@
 
 namespace Workshop\Domains\Wallet;
 
-use EventSauce\EventSourcing\Serialization\SerializablePayload;
-
-class WithdrawalRefused implements SerializablePayload
+class WithdrawalRefused
 {
     private int $amountOfTokens;
 
@@ -13,13 +11,8 @@ class WithdrawalRefused implements SerializablePayload
         $this->amountOfTokens = $amountOfTokens;
     }
 
-    public function toPayload(): array
+    public function amountOfTokens(): int
     {
-        return ['amountOfTokens' => $this->amountOfTokens];
-    }
-
-    public static function fromPayload(array $payload): static
-    {
-        return new self($payload['amountOfTokens']);
+        return $this->amountOfTokens;
     }
 }

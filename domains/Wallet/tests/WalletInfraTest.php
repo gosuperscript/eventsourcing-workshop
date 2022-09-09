@@ -29,6 +29,7 @@ class WalletInfraTest extends TestCase
         $reloadedWallet->withdraw(99);
         $this->expectException(SorryCantWithdraw::class);
         $reloadedWallet->withdraw(2);
+        $walletRepo->persist($reloadedWallet);
     }
 
     /** @test */

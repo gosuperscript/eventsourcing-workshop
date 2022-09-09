@@ -33,12 +33,12 @@ class Wallet implements AggregateRoot
 
     protected function applyTokensDeposited(TokensDeposited $event): void
     {
-        $this->balance += $event->tokens();
+        $this->balance += $event->amountOfTokens();
     }
 
     protected function applyTokensWithdrawn(TokensWithdrawn $event): void
     {
-        $this->balance -= $event->tokens();
+        $this->balance -= $event->amountOfTokens();
     }
 
     protected function applyWithdrawalRefused(WithdrawalRefused $event): void
