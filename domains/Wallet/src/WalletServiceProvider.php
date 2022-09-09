@@ -4,6 +4,7 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
 use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
+use EventSauce\EventSourcing\ExplicitlyMappedClassNameInflector;
 use EventSauce\EventSourcing\MessageDecoratorChain;
 use EventSauce\EventSourcing\MessageDispatcherChain;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
@@ -22,11 +23,17 @@ class WalletServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->app->bind(ExplicitlyMappedClassNameInflector::class, function (){
+            return new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
+        });
+
         $this->app->bind(WalletMessageRepository::class, function (Application $application){
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
                 tableName: 'wallet_messages',
-                serializer: new ConstructingMessageSerializer(),
+                serializer: new ConstructingMessageSerializer(
+                    classNameInflector: $this->app->make(ExplicitlyMappedClassNameInflector::class)
+                ),
                 tableSchema: new DefaultTableSchema(),
                 uuidEncoder: new StringUuidEncoder(),
             );
@@ -39,10 +46,12 @@ class WalletServiceProvider extends ServiceProvider
                     IntegrationTestMessageDispatcher::instance(),
                 ),
                 new MessageDecoratorChain(
-                    new DefaultHeadersDecorator(),
+                    new DefaultHeadersDecorator(
+                        inflector: $this->app->make(ExplicitlyMappedClassNameInflector::class),
+                    ),
                     new RandomNumberMessageHeaderAdder(),
                 ),
-                new DotSeparatedSnakeCaseInflector(),
+                $this->app->make(ExplicitlyMappedClassNameInflector::class),
             );
         });
     }
