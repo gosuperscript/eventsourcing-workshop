@@ -4,6 +4,9 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\AggregateRoot;
 use EventSauce\EventSourcing\AggregateRootBehaviour;
+use Workshop\Domains\Wallet\Events\TokensDeposited;
+use Workshop\Domains\Wallet\Events\TokensWithdrawn;
+use Workshop\Domains\Wallet\Events\WithdrawalRefused;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 
 class Wallet implements AggregateRoot

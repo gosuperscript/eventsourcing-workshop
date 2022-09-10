@@ -1,6 +1,6 @@
 <?php
 
-namespace Workshop\Domains\Wallet;
+namespace Workshop\Domains\Wallet\Decorators;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageDecorator;

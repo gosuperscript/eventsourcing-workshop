@@ -1,12 +1,13 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests;
+namespace Workshop\Domains\Wallet\Tests\Unit;
 
+use Workshop\Domains\Wallet\Events\TokensDeposited;
+use Workshop\Domains\Wallet\Events\TokensWithdrawn;
+use Workshop\Domains\Wallet\Events\WithdrawalRefused;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
-use Workshop\Domains\Wallet\TokensDeposited;
-use Workshop\Domains\Wallet\TokensWithdrawn;
+use Workshop\Domains\Wallet\Tests\WalletTestCase;
 use Workshop\Domains\Wallet\Wallet;
-use Workshop\Domains\Wallet\WithdrawalRefused;
 
 class WithdrawTokensTest extends WalletTestCase
 {

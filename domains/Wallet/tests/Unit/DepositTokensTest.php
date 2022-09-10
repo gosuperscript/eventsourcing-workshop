@@ -1,8 +1,9 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests;
+namespace Workshop\Domains\Wallet\Tests\Unit;
 
-use Workshop\Domains\Wallet\TokensDeposited;
+use Workshop\Domains\Wallet\Events\TokensDeposited;
+use Workshop\Domains\Wallet\Tests\WalletTestCase;
 use Workshop\Domains\Wallet\Wallet;
 
 class DepositTokensTest extends WalletTestCase

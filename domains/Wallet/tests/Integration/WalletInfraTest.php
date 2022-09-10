@@ -1,14 +1,16 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests;
+namespace Workshop\Domains\Wallet\Tests\Integration;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Workshop\Domains\Wallet\Decorators\RandomNumberMessageHeaderAdder;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
-use Workshop\Domains\Wallet\RandomNumberMessageHeaderAdder;
+use Workshop\Domains\Wallet\Tests\IntegrationTestMessageDispatcher;
 use Workshop\Domains\Wallet\Wallet;
 use Workshop\Domains\Wallet\WalletId;
+use function app;
 
 class WalletInfraTest extends TestCase
 {

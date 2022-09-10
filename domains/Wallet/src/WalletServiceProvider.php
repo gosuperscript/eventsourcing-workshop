@@ -3,18 +3,17 @@
 namespace Workshop\Domains\Wallet;
 
 use EventSauce\EventSourcing\DefaultHeadersDecorator;
-use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
 use EventSauce\EventSourcing\ExplicitlyMappedClassNameInflector;
 use EventSauce\EventSourcing\MessageDecoratorChain;
 use EventSauce\EventSourcing\MessageDispatcherChain;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
 use EventSauce\UuidEncoding\StringUuidEncoder;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Workshop\Domains\Wallet\Decorators\RandomNumberMessageHeaderAdder;
 use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\Tests\IntegrationTestMessageDispatcher;

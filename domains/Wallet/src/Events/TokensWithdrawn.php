@@ -1,8 +1,8 @@
 <?php
 
-namespace Workshop\Domains\Wallet;
+namespace Workshop\Domains\Wallet\Events;
 
-class WithdrawalRefused
+class TokensWithdrawn
 {
     private int $amountOfTokens;
 
