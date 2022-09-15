@@ -17,8 +17,8 @@ class IlluminateAccountRepository implements AccountRepository
         private Dispatcher $dispatcher,
     )
     {
-
     }
+
     public function getForRead(string $accountId): AccountReadModel
     {
         return AccountReadModel::fromState($this->getAccountState($accountId));
