@@ -10,6 +10,7 @@ interface TransactionsReadModelRepository
         string $eventId,
         string $walletId,
         int $amount,
-        Carbon $transactedAt
+        Carbon $transactedAt,
+        string $description
     ): void;
 }
