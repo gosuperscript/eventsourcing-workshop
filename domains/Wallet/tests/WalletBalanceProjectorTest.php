@@ -24,7 +24,7 @@ class WalletBalanceProjectorTest extends MessageConsumerTestCase
     public function it_increments_balance()
     {
         $this->givenNextMessagesHaveAggregateRootIdOf($this->walletId)
-            ->when(new TokensDeposited(10, 'foo'))
+            ->when(new TokensDeposited(10, 'foo', new \DateTimeImmutable()))
             ->then(function (){
                 $this->assertEquals(10, $this->walletReadRepository->getWalletTokens($this->walletId));
             });
@@ -34,8 +34,8 @@ class WalletBalanceProjectorTest extends MessageConsumerTestCase
     public function it_decrements_balance()
     {
         $this->givenNextMessagesHaveAggregateRootIdOf($this->walletId)
-            ->given(new TokensDeposited(10, 'foo'))
-            ->when(new TokensWithdrawn(5, 'foo'))
+            ->given(new TokensDeposited(10, 'foo', new \DateTimeImmutable()))
+            ->when(new TokensWithdrawn(5, 'foo', new \DateTimeImmutable()))
             ->then(function (){
                 $this->assertEquals(5, $this->walletReadRepository->getWalletTokens($this->walletId));
             });

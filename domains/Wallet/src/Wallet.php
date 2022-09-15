@@ -15,18 +15,18 @@ class Wallet implements AggregateRoot
 
     private int $tokens = 0;
 
-    public function deposit(int $tokens, string $description): void
+    public function deposit(int $tokens, string $description, \DateTimeImmutable $transactedAt): void
     {
-        $this->recordThat(new TokensDeposited($tokens, $description));
+        $this->recordThat(new TokensDeposited($tokens, $description, $transactedAt));
     }
 
-    public function withdraw(int $tokens, string $description)
+    public function withdraw(int $tokens, string $description, \DateTimeImmutable $transactedAt)
     {
         if($this->tokens < $tokens) {
             $this->recordThat(WithdrawalFailed::becauseOfInsufficientFunds());
             throw SorryCantWithdraw::becauseOfInsufficientFunds();
         }
-        $this->recordThat(new TokensWithdrawn($tokens, $description));
+        $this->recordThat(new TokensWithdrawn($tokens, $description, $transactedAt));
     }
 
     private function applyTokensDeposited(TokensDeposited $event): void

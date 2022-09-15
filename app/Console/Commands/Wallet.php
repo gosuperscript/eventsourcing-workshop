@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Assert\Assert;
+use EventSauce\Clock\Clock;
 use Illuminate\Console\Command;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
@@ -29,7 +30,7 @@ class Wallet extends Command
      *
      * @return int
      */
-    public function handle(WalletRepository $walletRepository)
+    public function handle(WalletRepository $walletRepository, Clock $clock)
     {
         $action = $this->choice(
             'Deposit or withdraw?',
@@ -47,9 +48,9 @@ class Wallet extends Command
         $wallet = $walletRepository->retrieve($walletId);
         try {
             if($action === 'Deposit'){
-                $wallet->deposit($tokens, $this->ask("description?"));
+                $wallet->deposit($tokens, $this->ask("description?"), $clock->now());
             } else {
-                $wallet->withdraw($tokens, $this->ask("description?"));
+                $wallet->withdraw($tokens, $this->ask("description?"), $clock->now());
             }
         } catch (SorryCantWithdraw $exception) {
             $this->error($exception->getMessage());

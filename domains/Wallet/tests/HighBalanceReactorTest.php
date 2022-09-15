@@ -19,7 +19,7 @@ class HighBalanceReactorTest extends MessageConsumerTestCase
         $walletId = WalletId::generate();
         $this->given()
             ->givenNextMessagesHaveAggregateRootIdOf($walletId)
-            ->when(new TokensDeposited(101, 'foo'))
+            ->when(new TokensDeposited(101, 'foo', new \DateTimeImmutable()))
             ->then(function () use ($walletId) {
                 $this->assertTrue($this->notificationService->notificationSendExactlyOnceForWallet($walletId));
             });

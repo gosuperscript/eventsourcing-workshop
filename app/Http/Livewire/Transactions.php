@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use EventSauce\Clock\Clock;
 use Workshop\Domains\Wallet\Infra\WalletBalanceRepository;
 use Workshop\Domains\Wallet\ReadModels\Transaction;
 use Livewire\Component;
@@ -26,11 +27,11 @@ class Transactions extends Component
         $this->walletId = $walletId;
     }
 
-    public function deposit(WalletRepository $walletRepository)
+    public function deposit(WalletRepository $walletRepository, Clock $clock)
     {
 
         $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->deposit($this->tokens, $this->description);
+        $wallet->deposit($this->tokens, $this->description, $clock->now());
         $walletRepository->persist($wallet);
 
         $this->tokens = 0;
