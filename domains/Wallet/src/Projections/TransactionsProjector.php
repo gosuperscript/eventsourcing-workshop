@@ -8,7 +8,7 @@ use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageConsumer;
 use Workshop\Domains\Wallet\Events\TokensDeposited;
 use Workshop\Domains\Wallet\Events\TokensWithdrawn;
-use Workshop\Domains\Wallet\Infra\TransactionsReadModelRepository;
+use Workshop\Domains\Wallet\ReadModels\TransactionsReadModelRepository;
 
 class TransactionsProjector implements MessageConsumer
 {

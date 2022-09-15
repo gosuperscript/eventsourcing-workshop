@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Workshop\Domains\Wallet\ReadModels\Balance;
 use Workshop\Domains\Wallet\ReadModels\Transaction;
 use Livewire\Component;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
@@ -54,6 +55,7 @@ class Transactions extends Component
     {
         return view('livewire.transactions', [
             'transactions' => Transaction::forWallet($this->walletId)->orderBy('transacted_at', 'desc')->paginate(10),
+            'balance' => Balance::forWallet($this->walletId)->first()?->balance ?: 0,
         ]);
     }
 }

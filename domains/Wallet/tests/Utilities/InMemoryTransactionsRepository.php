@@ -3,7 +3,7 @@
 namespace Workshop\Domains\Wallet\Tests\Utilities;
 
 use Carbon\Carbon;
-use Workshop\Domains\Wallet\Infra\TransactionsReadModelRepository;
+use Workshop\Domains\Wallet\ReadModels\TransactionsReadModelRepository;
 
 class InMemoryTransactionsRepository implements TransactionsReadModelRepository
 {

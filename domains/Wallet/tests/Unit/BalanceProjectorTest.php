@@ -8,14 +8,14 @@ use EventSauce\EventSourcing\MessageConsumer;
 use EventSauce\EventSourcing\TestUtilities\MessageConsumerTestCase;
 use Workshop\Domains\Wallet\Events\TokensDeposited;
 use Workshop\Domains\Wallet\Events\TokensWithdrawn;
-use Workshop\Domains\Wallet\Projections\TransactionsProjector;
-use Workshop\Domains\Wallet\Tests\Utilities\InMemoryTransactionsRepository;
+use Workshop\Domains\Wallet\Projections\BalanceProjector;
+use Workshop\Domains\Wallet\Tests\Utilities\InMemoryBalanceRepository;
 use Workshop\Domains\Wallet\WalletId;
 
-class TransactionsProjectorTest extends MessageConsumerTestCase
+class BalanceProjectorTest extends MessageConsumerTestCase
 {
     private WalletId $walletId;
-    private InMemoryTransactionsRepository $transactionsRepository;
+    private InMemoryBalanceRepository $repository;
 
     public function setUp(): void
     {
@@ -38,11 +38,8 @@ class TransactionsProjectorTest extends MessageConsumerTestCase
                 ])
             )
             ->then(function (){
-                $transactions = $this->transactionsRepository->getTransactions();
-                $this->assertCount(1, $transactions);
-                $transaction = $transactions[0];
-                $this->assertEquals(10, $transaction['amount']);
-                $this->assertEquals($this->walletId->toString(), $transaction['walletId']);
+                $balance = $this->repository->getBalanceFor($this->walletId);
+                $this->assertEquals(10, $balance->balance);
             });
     }
 
@@ -61,7 +58,7 @@ class TransactionsProjectorTest extends MessageConsumerTestCase
                 ]))
             ->when(
                 (new Message(
-                    new TokensWithdrawn(10)
+                    new TokensWithdrawn(5)
                 ))->withHeaders([
                     Header::EVENT_ID => 'event-id2',
                     Header::TIME_OF_RECORDING => '2022-09-08 13:16:36.790434+0000',
@@ -69,17 +66,14 @@ class TransactionsProjectorTest extends MessageConsumerTestCase
                 ])
             )
             ->then(function (){
-                $transactions = $this->transactionsRepository->getTransactions();
-                $this->assertCount(2, $transactions);
-                $transaction = $transactions[1];
-                $this->assertEquals(-10, $transaction['amount']);
-                $this->assertEquals($this->walletId->toString(), $transaction['walletId']);
+                $balance = $this->repository->getBalanceFor($this->walletId);
+                $this->assertEquals(5, $balance->balance);
             });
     }
 
     public function messageConsumer(): MessageConsumer
     {
-        $this->transactionsRepository = new InMemoryTransactionsRepository();
-        return new TransactionsProjector($this->transactionsRepository);
+        $this->repository = new InMemoryBalanceRepository();
+        return new BalanceProjector($this->repository);
     }
 }

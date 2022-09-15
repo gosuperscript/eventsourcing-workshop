@@ -1,6 +1,6 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Infra;
+namespace Workshop\Domains\Wallet\ReadModels;
 
 use Carbon\Carbon;
 

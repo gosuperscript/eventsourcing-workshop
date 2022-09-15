@@ -4,6 +4,7 @@ namespace Workshop\Domains\Wallet\Infra;
 
 use Carbon\Carbon;
 use Workshop\Domains\Wallet\ReadModels\Transaction;
+use Workshop\Domains\Wallet\ReadModels\TransactionsReadModelRepository;
 
 class EloquentTransactionsReadModelRepository implements TransactionsReadModelRepository
 {

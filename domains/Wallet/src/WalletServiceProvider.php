@@ -16,9 +16,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Workshop\Domains\Wallet\Decorators\EventIDDecorator;
 use Workshop\Domains\Wallet\Decorators\RandomNumberMessageHeaderAdder;
+use Workshop\Domains\Wallet\Infra\EloquentBalanceRepository;
 use Workshop\Domains\Wallet\Infra\EloquentTransactionsRepository;
 use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
+use Workshop\Domains\Wallet\Projections\BalanceProjector;
 use Workshop\Domains\Wallet\Projections\TransactionsProjector;
 use Workshop\Domains\Wallet\Tests\Utilities\IntegrationTestMessageDispatcher;
 
@@ -33,6 +35,9 @@ class WalletServiceProvider extends ServiceProvider
 
         $this->app->bind(TransactionsProjector::class, function (){
             return new TransactionsProjector(new EloquentTransactionsRepository());
+        });
+        $this->app->bind(BalanceProjector::class, function (){
+            return new BalanceProjector(new EloquentBalanceRepository());
         });
 
         $this->app->bind(WalletMessageRepository::class, function (Application $application){
@@ -55,6 +60,7 @@ class WalletServiceProvider extends ServiceProvider
                     IntegrationTestMessageDispatcher::instance(),
                     new SynchronousMessageDispatcher(
                         $this->app->make(TransactionsProjector::class),
+                        $this->app->make(BalanceProjector::class),
                     )
                 ),
                 new MessageDecoratorChain(
