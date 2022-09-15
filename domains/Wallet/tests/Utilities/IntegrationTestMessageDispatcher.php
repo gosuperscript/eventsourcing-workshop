@@ -1,6 +1,6 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests;
+namespace Workshop\Domains\Wallet\Tests\Utilities;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageDispatcher;

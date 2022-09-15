@@ -1,6 +1,6 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests;
+namespace Workshop\Domains\Wallet\Tests\Utilities;
 
 use Workshop\Domains\Wallet\Infra\NotificationService;
 use Workshop\Domains\Wallet\WalletId;

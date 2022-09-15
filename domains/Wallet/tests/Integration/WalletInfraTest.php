@@ -7,7 +7,7 @@ use Tests\TestCase;
 use Workshop\Domains\Wallet\Decorators\RandomNumberMessageHeaderAdder;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
-use Workshop\Domains\Wallet\Tests\IntegrationTestMessageDispatcher;
+use Workshop\Domains\Wallet\Tests\Utilities\IntegrationTestMessageDispatcher;
 use Workshop\Domains\Wallet\Wallet;
 use Workshop\Domains\Wallet\WalletId;
 use function app;
