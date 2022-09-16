@@ -25,4 +25,10 @@ class InMemoryTransactionsRepository implements TransactionsReadModelRepository
     {
         return $this->transactions;
     }
+
+
+    public function truncate()
+    {
+        $this->transactions = [];
+    }
 }

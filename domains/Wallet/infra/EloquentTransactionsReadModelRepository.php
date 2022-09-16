@@ -18,4 +18,9 @@ class EloquentTransactionsReadModelRepository implements TransactionsReadModelRe
             'description' => $description,
         ]);
     }
+
+    public function truncate()
+    {
+        Transaction::truncate();
+    }
 }

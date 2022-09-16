@@ -13,4 +13,6 @@ interface TransactionsReadModelRepository
         Carbon $transactedAt,
         string $description
     ): void;
+
+    public function truncate();
 }
