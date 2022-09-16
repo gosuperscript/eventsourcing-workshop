@@ -39,10 +39,10 @@ class Transactions extends Component
         session()->flash('success', 'Money successfully deposited.');
     }
 
-    public function withdraw(WalletRepository $walletRepository)
+    public function withdraw(WalletRepository $walletRepository, Clock $clock)
     {
         $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->withdraw($this->tokens, $this->description);
+        $wallet->withdraw($this->tokens, $this->description, $clock->now());
         $walletRepository->persist($wallet);
 
         $this->tokens = 0;
