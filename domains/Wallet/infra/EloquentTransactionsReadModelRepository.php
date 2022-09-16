@@ -7,7 +7,6 @@ use Workshop\Domains\Wallet\ReadModels\Transaction;
 
 class EloquentTransactionsReadModelRepository implements TransactionsReadModelRepository
 {
-
     public function addTransaction(string $eventId, string $walletId, int $amount, Carbon $transactedAt): void
     {
         Transaction::create([
