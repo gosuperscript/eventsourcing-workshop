@@ -17,4 +17,9 @@ class EloquentTransactionsReadModelRepository implements TransactionsReadModelRe
             'transacted_at' => $transactedAt
         ]);
     }
+
+    public function truncate()
+    {
+        Transaction::truncate();
+    }
 }

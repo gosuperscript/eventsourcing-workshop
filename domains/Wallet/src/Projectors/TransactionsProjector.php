@@ -6,15 +6,21 @@ use Carbon\Carbon;
 use EventSauce\EventSourcing\EventConsumption\EventConsumer;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
+use EventSauce\EventSourcing\ReplayingMessages\TriggerBeforeReplay;
 use Workshop\Domains\Wallet\Events\TokensDeposited;
 use Workshop\Domains\Wallet\Events\TokensWithdrawn;
 use Workshop\Domains\Wallet\Infra\TransactionsReadModelRepository;
 
-final class TransactionsProjector extends EventConsumer
+final class TransactionsProjector extends EventConsumer implements TriggerBeforeReplay
 {
 
     public function __construct(private TransactionsReadModelRepository $transactionsReadModelRepository)
     {
+    }
+
+    public function beforeReplay(): void
+    {
+        $this->transactionsReadModelRepository->truncate();
     }
 
     public function handleTokensDeposited(TokensDeposited $event, Message $message): void
@@ -23,7 +29,7 @@ final class TransactionsProjector extends EventConsumer
             $message->headers()[Header::EVENT_ID],
             $message->aggregateRootId()->toString(),
             $event->tokens,
-            Carbon::createFromImmutable($message->timeOfRecording())
+            Carbon::createFromImmutable($message->timeOfRecording()),
         );
     }
 
@@ -36,5 +42,6 @@ final class TransactionsProjector extends EventConsumer
             Carbon::createFromImmutable($message->timeOfRecording())
         );
     }
+
 
 }
