@@ -9,6 +9,7 @@ use EventSauce\EventSourcing\MessageDispatcher;
 use EventSauce\EventSourcing\MessageRepository;
 use Workshop\Domains\Wallet\Wallet;
 
+/** @method \Workshop\Domains\Wallet\Wallet retrieve(\Workshop\Domains\Wallet\WalletId $aggregateRootId) */
 class WalletRepository extends EventSourcedAggregateRootRepository
 {
     public function __construct(
