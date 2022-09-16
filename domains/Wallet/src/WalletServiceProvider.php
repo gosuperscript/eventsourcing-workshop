@@ -28,6 +28,7 @@ use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\Projectors\TransactionsProjector;
 use Workshop\Domains\Wallet\Projectors\WalletBalanceProjector;
+use Workshop\Domains\Wallet\Upcasters\BalanceUpcaster;
 use Workshop\Domains\Wallet\Upcasters\TransactedAtUpcaster;
 
 class WalletServiceProvider extends ServiceProvider
@@ -44,6 +45,8 @@ class WalletServiceProvider extends ServiceProvider
         // This should live in a config file.
         $classNameInflector = new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
 
+        $this->app->singleton(BalanceUpcaster::class, fn(Application $app) => new BalanceUpcaster());
+
         $this->app->bind(WalletMessageRepository::class, function (Application $application) use ($classNameInflector) {
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
@@ -53,7 +56,8 @@ class WalletServiceProvider extends ServiceProvider
                         classNameInflector: $classNameInflector
                     ),
                     upcaster: new UpcasterChain(
-                        upcasters: new TransactedAtUpcaster()
+                         new TransactedAtUpcaster(),
+                        $application->make(BalanceUpcaster::class)
                     )
                 ),
                 tableSchema: new DefaultTableSchema(),
