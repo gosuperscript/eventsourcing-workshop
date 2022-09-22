@@ -26,6 +26,7 @@ use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\Projectors\TransactionsProjector;
 use Workshop\Domains\Wallet\Projectors\WalletBalanceProjector;
 use Workshop\Domains\Wallet\Upcasters\TransactedAtUpcaster;
+use Workshop\Domains\Wallet\Upcasters\TransactionCorrectionUpcaster;
 
 class WalletServiceProvider extends ServiceProvider
 {
@@ -46,7 +47,10 @@ class WalletServiceProvider extends ServiceProvider
                 serializer: new UpcastingMessageSerializer(
                     eventSerializer: new ConstructingMessageSerializer(classNameInflector: $classNameInflector),
                     upcaster: new UpcasterChain(
-                        upcasters: new TransactedAtUpcaster(),
+                        new TransactedAtUpcaster(),
+                        new TransactionCorrectionUpcaster([
+                            '63a69acb-0961-4425-9d1b-20c6475737d6' => 100,
+                        ]),
                     ),
                 ),
                 tableSchema: new DefaultTableSchema(),
