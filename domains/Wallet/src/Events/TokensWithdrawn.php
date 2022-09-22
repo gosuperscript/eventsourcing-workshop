@@ -12,6 +12,7 @@ final class TokensWithdrawn implements SerializablePayload
         public readonly int $tokens,
         public readonly string $description,
         public readonly \DateTimeImmutable $transactedAt,
+        public readonly int $balance,
     ) {
     }
 
@@ -20,7 +21,8 @@ final class TokensWithdrawn implements SerializablePayload
         return [
             'tokens' => $this->tokens,
             'description' => $this->description,
-            'transacted_at' => $this->transactedAt->format(self::DATE_TIME_FORMAT)
+            'transacted_at' => $this->transactedAt->format(self::DATE_TIME_FORMAT),
+            'balance' => $this->balance
         ];
     }
 
@@ -29,7 +31,8 @@ final class TokensWithdrawn implements SerializablePayload
         return new static(
             $payload['tokens'],
             array_key_exists('description', $payload) ? $payload['description'] : 'unknown',
-            \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $payload['transacted_at'])
+            \DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $payload['transacted_at']),
+            $payload['balance'],
         );
     }
 }

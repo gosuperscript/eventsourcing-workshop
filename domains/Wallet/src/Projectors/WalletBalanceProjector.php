@@ -16,13 +16,11 @@ class WalletBalanceProjector extends EventConsumer
 
     public function handleTokensDeposited(TokensDeposited $tokensDeposited, Message $message)
     {
-        $tokens = $this->walletReadRepository->getWalletTokens($message->aggregateRootId());
-        $this->walletReadRepository->updateWalletTokens($message->aggregateRootId(), $tokens + $tokensDeposited->tokens);
+        $this->walletReadRepository->updateWalletTokens($message->aggregateRootId(), $tokensDeposited->balance);
     }
 
     public function handleTokensWithdrawn(TokensWithdrawn $tokensWithdrawn, Message $message)
     {
-        $tokens = $this->walletReadRepository->getWalletTokens($message->aggregateRootId());
-        $this->walletReadRepository->updateWalletTokens($message->aggregateRootId(), $tokens - $tokensWithdrawn->tokens);
+        $this->walletReadRepository->updateWalletTokens($message->aggregateRootId(), $tokensWithdrawn->balance);
     }
 }
