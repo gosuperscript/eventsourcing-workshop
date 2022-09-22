@@ -26,20 +26,22 @@ final class TransactionsProjector extends EventConsumer implements TriggerBefore
     public function handleTokensDeposited(TokensDeposited $event, Message $message): void
     {
         $this->transactionsReadModelRepository->addTransaction(
-            $message->headers()[Header::EVENT_ID],
-            $message->aggregateRootId()->toString(),
-            $event->tokens,
-            Carbon::createFromImmutable($message->timeOfRecording()),
+            eventId: $message->headers()[Header::EVENT_ID],
+            walletId: $message->aggregateRootId()->toString(),
+            amount: $event->tokens,
+            transactedAt: Carbon::createFromImmutable($message->timeOfRecording()),
+            description: $event->description,
         );
     }
 
     public function handleTokensWithdrawn(TokensWithdrawn $event, Message $message): void
     {
         $this->transactionsReadModelRepository->addTransaction(
-            $message->headers()[Header::EVENT_ID],
-            $message->aggregateRootId()->toString(),
-            -$event->tokens,
-            Carbon::createFromImmutable($message->timeOfRecording())
+            eventId: $message->headers()[Header::EVENT_ID],
+            walletId: $message->aggregateRootId()->toString(),
+            amount: -$event->tokens,
+            transactedAt: Carbon::createFromImmutable($message->timeOfRecording()),
+            description: $event->description,
         );
     }
 

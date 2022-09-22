@@ -7,7 +7,8 @@ use EventSauce\EventSourcing\Serialization\SerializablePayload;
 final class TokensDeposited implements SerializablePayload
 {
     public function __construct(
-        public readonly int $tokens
+        public readonly int $tokens,
+        public readonly string $description = 'unknown',
     ) {
     }
 
