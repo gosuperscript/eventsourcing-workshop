@@ -10,7 +10,7 @@ use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
 use EventSauce\EventSourcing\SynchronousMessageDispatcher;
 use EventSauce\MessageRepository\TableSchema\DefaultTableSchema;
-use EventSauce\UuidEncoding\BinaryUuidEncoder;
+use EventSauce\UuidEncoding\StringUuidEncoder;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -24,6 +24,7 @@ use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\Projectors\TransactionsProjector;
 use Workshop\Domains\Wallet\Projectors\WalletBalanceProjector;
+use Workshop\Domains\Wallet\Upcasters\TransactedAtUpcaster;
 
 class WalletServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,7 @@ class WalletServiceProvider extends ServiceProvider
                 tableName: 'wallet_messages',
                 serializer: new ConstructingMessageSerializer(classNameInflector: $classNameInflector),
                 tableSchema: new DefaultTableSchema(),
-                uuidEncoder: new BinaryUuidEncoder(),
+                uuidEncoder: new StringUuidEncoder(),
             );
         });
 
