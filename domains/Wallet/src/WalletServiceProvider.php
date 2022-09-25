@@ -14,6 +14,13 @@ use Illuminate\Support\ServiceProvider;
 use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
+use Workshop\Domains\Wallet\Projectors\TransactionsProjector;
+use EventSauce\EventSourcing\SynchronousMessageDispatcher;
+use Workshop\Domains\Wallet\Infra\EloquentNotificationService;
+use Workshop\Domains\Wallet\Infra\TransactionsReadModelRepository;
+use Workshop\Domains\Wallet\Infra\EloquentTransactionsReadModelRepository;
+use Workshop\Domains\Wallet\Infra\NotificationService;
+use Workshop\Domains\Wallet\Reactors\NotificationsReactor;
 
 class WalletServiceProvider extends ServiceProvider
 {
@@ -35,10 +42,20 @@ class WalletServiceProvider extends ServiceProvider
         $this->app->bind(WalletRepository::class, function () {
             return new WalletRepository(
                 $this->app->make(WalletMessageRepository::class),
-                new MessageDispatcherChain(),
+                new MessageDispatcherChain(
+                    new SynchronousMessageDispatcher(
+                        $this->app->make(TransactionsProjector::class),
+                    ),
+                    new SynchronousMessageDispatcher(
+                        $this->app->make(NotificationsReactor::class)
+                    )
+                ),
                 new DefaultHeadersDecorator(),
                 new DotSeparatedSnakeCaseInflector(),
             );
         });
+
+        $this->app->bind(TransactionsReadModelRepository::class, EloquentTransactionsReadModelRepository::class);
+        $this->app->bind(NotificationService::class, EloquentNotificationService::class);
     }
 }

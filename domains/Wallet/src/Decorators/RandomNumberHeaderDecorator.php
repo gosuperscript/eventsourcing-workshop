@@ -1,11 +1,11 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Infra;
+namespace Workshop\Domains\Wallet\Decorators;
 
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\MessageDecorator;
 
-class WalletDecorator implements MessageDecorator
+class RandomNumberHeaderDecorator implements MessageDecorator
 {
     public function decorate(Message $message): Message
     {

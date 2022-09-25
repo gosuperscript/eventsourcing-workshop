@@ -54,6 +54,7 @@ class Transactions extends Component
     {
         return view('livewire.transactions', [
             'transactions' => Transaction::forWallet($this->walletId)->orderBy('transacted_at', 'desc')->paginate(10),
+            'balance' => Transaction::forWallet($this->walletId)->sum('amount')
         ]);
     }
 }

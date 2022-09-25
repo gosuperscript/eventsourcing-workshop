@@ -40,6 +40,11 @@
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{$transaction->transacted_at->diffForHumans()}}</td>
                                         </tr>
                                     @endforeach
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Balance: {{$balance}}</td>
+                                        </tr>
+                                    </tfoot>
                                     </tbody>
                                 </table>
                                 <div class="p-2">{{ $transactions->links() }}</div>

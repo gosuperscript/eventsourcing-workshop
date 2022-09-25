@@ -7,7 +7,6 @@ use Workshop\Domains\Wallet\WalletId;
 
 class InMemoryNotificationService implements NotificationService
 {
-
     private array $notifications = [];
 
     public function sendWalletHighBalanceNotification(WalletId $walletId): void
@@ -18,5 +17,10 @@ class InMemoryNotificationService implements NotificationService
     public function notificationSendExactlyOnceForWallet(WalletId $walletId): bool
     {
         return count(array_keys($this->notifications, $walletId->toString())) === 1;
+    }
+
+    public function getNotifications()
+    {
+        return $this->notifications;
     }
 }
