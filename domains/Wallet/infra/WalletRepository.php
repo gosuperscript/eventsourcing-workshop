@@ -13,6 +13,7 @@ use EventSauce\EventSourcing\MessageDecoratorChain;
 use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
 use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
 
+/** @method \Workshop\Domains\Wallet\Wallet retrieve(\Workshop\Domains\Wallet\WalletId $aggregateRootId) */
 class WalletRepository extends EventSourcedAggregateRootRepository
 {
     public function __construct(
