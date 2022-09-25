@@ -8,6 +8,10 @@ use EventSauce\EventSourcing\MessageDecorator;
 use EventSauce\EventSourcing\MessageDispatcher;
 use EventSauce\EventSourcing\MessageRepository;
 use Workshop\Domains\Wallet\Wallet;
+use EventSauce\EventSourcing\DefaultHeadersDecorator;
+use EventSauce\EventSourcing\MessageDecoratorChain;
+use EventSauce\EventSourcing\Serialization\ConstructingMessageSerializer;
+use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
 
 class WalletRepository extends EventSourcedAggregateRootRepository
 {
@@ -17,11 +21,16 @@ class WalletRepository extends EventSourcedAggregateRootRepository
         MessageDecorator $decorator,
         ClassNameInflector $classNameInflector,
     ) {
+        $chain = new MessageDecoratorChain(
+            new DefaultHeadersDecorator(),
+            new WalletDecorator()
+        );
+
         parent::__construct(
             aggregateRootClassName: Wallet::class,
             messageRepository: $messageRepository,
             dispatcher: $dispatcher,
-            decorator: $decorator,
+            decorator: $chain,
             classNameInflector: $classNameInflector
         );
     }
