@@ -12,6 +12,7 @@ class Transactions extends Component
     public string $walletId;
 
     public $tokens = 0;
+    public $description = '';
 
     protected $rules = [
         'tokens' => 'required|integer|min:1',
@@ -28,20 +29,22 @@ class Transactions extends Component
     {
 
         $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->deposit($this->tokens);
+        $wallet->deposit($this->tokens, $this->description);
         $walletRepository->persist($wallet);
 
         $this->tokens = 0;
+        $this->description = '';
         session()->flash('success', 'Money successfully deposited.');
     }
 
     public function withdraw(WalletRepository $walletRepository)
     {
         $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->withdraw($this->tokens);
+        $wallet->withdraw($this->tokens, $this->description);
         $walletRepository->persist($wallet);
 
         $this->tokens = 0;
+        $this->description = '';
         session()->flash('success', 'Money successfully withdrawn.');
     }
 

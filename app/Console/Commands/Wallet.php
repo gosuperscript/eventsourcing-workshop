@@ -47,9 +47,9 @@ class Wallet extends Command
         $wallet = $walletRepository->retrieve($walletId);
         try {
             if($action === 'Deposit'){
-                $wallet->deposit($tokens);
+                $wallet->deposit($tokens, $this->ask("description?"));
             } else {
-                $wallet->withdraw($tokens);
+                $wallet->withdraw($tokens, $this->ask("description?"));
             }
         } catch (SorryCantWithdraw $exception) {
             $this->error($exception->getMessage());
