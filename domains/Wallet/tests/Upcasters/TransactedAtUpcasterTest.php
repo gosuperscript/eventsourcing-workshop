@@ -60,6 +60,22 @@ class TransactedAtUpcasterTest extends TestCase
         $this->assertEquals($output, $input);
     }
 
+    public function test_it_upcasts_event_with_specific_id()
+    {
+        $input = [
+            'headers' => [
+                '__event_type' => 'tokens_deposited',
+                '__time_of_recording' => '2022-09-15 17:09:42.410100+0000',
+            ],
+            'payload' => [
+            ]
+        ];
+        $output = $this->upcast($input);
+
+        $input['payload']['transacted_at'] = $input['headers']['__time_of_recording'];
+        $this->assertEquals($output, $input);
+    }
+
     private function upcast(array $input): array
     {
         return $this->upcaster->upcast($input);

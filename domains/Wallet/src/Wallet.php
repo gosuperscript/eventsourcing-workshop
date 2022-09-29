@@ -14,9 +14,9 @@ class Wallet implements AggregateRoot
 
     public int $tokens = 0;
 
-    public function deposit(int $tokens)
+    public function deposit(int $tokens, string $description)
     {
-        $this->recordThat(new Events\TokensDeposited($tokens));
+        $this->recordThat(new Events\TokensDeposited($tokens, $description));
 
         return $this;
     }
@@ -26,10 +26,10 @@ class Wallet implements AggregateRoot
         $this->tokens += $event->tokens();
     }
 
-    public function withdraw(int $tokens)
+    public function withdraw(int $tokens, string $description)
     {
         if ($this->tokens >= $tokens) {
-            $this->recordThat(new Events\TokensWithdrawn($tokens));
+            $this->recordThat(new Events\TokensWithdrawn($tokens, $description));
         } else {
             $this->recordThat(new Events\TokensOverdrawAttempted(time()));
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Workshop\Domains\Wallet\Tests\Unit\Projectors;
+namespace Workshop\Domains\Wallet\Tests\Unit\Reactors;
 
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;

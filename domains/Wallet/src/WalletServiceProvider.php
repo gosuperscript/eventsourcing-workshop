@@ -16,11 +16,18 @@ use Workshop\Domains\Wallet\Infra\WalletRepository;
 use EventSauce\EventSourcing\Serialization\ObjectMapperPayloadSerializer;
 use Workshop\Domains\Wallet\Projectors\TransactionsProjector;
 use EventSauce\EventSourcing\SynchronousMessageDispatcher;
+use EventSauce\EventSourcing\Upcasting\UpcasterChain;
 use Workshop\Domains\Wallet\Infra\EloquentNotificationService;
 use Workshop\Domains\Wallet\Infra\TransactionsReadModelRepository;
 use Workshop\Domains\Wallet\Infra\EloquentTransactionsReadModelRepository;
 use Workshop\Domains\Wallet\Infra\NotificationService;
+use Workshop\Domains\Wallet\Upcasters\TransactedAtUpcaster;
 use Workshop\Domains\Wallet\Reactors\NotificationsReactor;
+use Workshop\Domains\Wallet\PublicEvents\Balance\BalanceTopic;
+use EventSauce\EventSourcing\Upcasting\UpcastingMessageSerializer;
+use EventSauce\MessageRepository\IlluminateMessageRepository\IlluminateUuidV4MessageRepository;
+use EventSauce\EventSourcing\MessageDispatcher;
+use EventSauce\Clock\SystemClock;
 
 class WalletServiceProvider extends ServiceProvider
 {
@@ -31,8 +38,13 @@ class WalletServiceProvider extends ServiceProvider
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
                 tableName: 'wallet_messages',
-                serializer: new ConstructingMessageSerializer(
-                    payloadSerializer: new ObjectMapperPayloadSerializer()
+                serializer: new UpcastingMessageSerializer(
+                    eventSerializer: new ConstructingMessageSerializer(
+                        payloadSerializer: new ObjectMapperPayloadSerializer()
+                    ),
+                    upcaster: new UpcasterChain(
+                        upcasters: new TransactedAtUpcaster()
+                    )
                 ),
                 tableSchema: new DefaultTableSchema(),
                 uuidEncoder: new StringUuidEncoder(),
@@ -52,6 +64,28 @@ class WalletServiceProvider extends ServiceProvider
                 ),
                 new DefaultHeadersDecorator(),
                 new DotSeparatedSnakeCaseInflector(),
+            );
+        });
+
+        $this->app->bind('WalletPublicEvents', function (Application $application) {
+            return new \Robertbaelde\PersistingMessageBus\Laravel\IlluminateMessageRepository(
+                connection: $application->make(DatabaseManager::class)->connection(),
+                tableName: 'wallet_public_events',
+                tableSchema: new \Robertbaelde\PersistingMessageBus\DefaultTableSchema(),
+            );
+        });
+
+        $this->app->bind(MessageDispatcher::class, function (Application $application) {
+            return new MessageDispatcher(
+                messageBus: new \Robertbaelde\PersistingMessageBus\MessageBus(
+                    new BalanceTopic(),
+                    new \Robertbaelde\PersistingMessageBus\Laravel\IlluminateMessageRepository(
+                        connection: $application->make(DatabaseManager::class)->connection(),
+                        tableName: 'wallet_public_events',
+                        tableSchema: new \Robertbaelde\PersistingMessageBus\DefaultTableSchema()
+                    )
+                ),
+                messageDecorator: new \Robertbaelde\PersistingMessageBus\DefaultMessageDecorator(new SystemClock()),
             );
         });
 
