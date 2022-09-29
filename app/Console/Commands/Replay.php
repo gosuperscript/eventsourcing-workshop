@@ -35,14 +35,11 @@ class Wallet extends Command
      *
      * @return int
      */
-    public function handle(WalletRepository $walletRepository)
+    public function handle(WalletMessageRepository $walletMessageRepository, TransactionsProjector $transactionsProjector)
     {
         Transaction::truncate();
 
-        $replayMessages = new ReplayMessages(
-            app(WalletMessageRepository::class),
-            app(TransactionsProjector::class),
-        );
+        $replayMessages = new ReplayMessages($walletMessageRepository, $transactionsProjector);
         
         $cursor = OffsetCursor::fromStart(limit: 100);
         
