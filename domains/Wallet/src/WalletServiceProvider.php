@@ -18,6 +18,9 @@ use EventSauce\UuidEncoding\BinaryUuidEncoder;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use League\Tactician\Handler\Locator\InMemoryLocator;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Decorators\EventIDDecorator;
 use Workshop\Domains\Wallet\Decorators\RandomNumberHeaderDecorator;
 use Workshop\Domains\Wallet\Infra\EloquentTransactionsReadModelRepository;
@@ -45,8 +48,6 @@ class WalletServiceProvider extends ServiceProvider
         // This should live in a config file.
         $classNameInflector = new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
 
-        $this->app->singleton(BalanceUpcaster::class, fn(Application $app) => new BalanceUpcaster());
-
         $this->app->bind(WalletMessageRepository::class, function (Application $application) use ($classNameInflector) {
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
@@ -56,8 +57,7 @@ class WalletServiceProvider extends ServiceProvider
                         classNameInflector: $classNameInflector
                     ),
                     upcaster: new UpcasterChain(
-                         new TransactedAtUpcaster(),
-                        $application->make(BalanceUpcaster::class)
+                         new TransactedAtUpcaster()
                     )
                 ),
                 tableSchema: new DefaultTableSchema(),
@@ -82,5 +82,10 @@ class WalletServiceProvider extends ServiceProvider
                 classNameInflector: $classNameInflector,
             );
         });
+
+        /** @var InMemoryLocator $locator */
+        $locator = $this->app->make(InMemoryLocator::class);
+        $locator->addHandler($this->app->make(WalletCommandHandler::class), WithdrawTokens::class);
+        $locator->addHandler($this->app->make(WalletCommandHandler::class), DepositTokens::class);
     }
 }
