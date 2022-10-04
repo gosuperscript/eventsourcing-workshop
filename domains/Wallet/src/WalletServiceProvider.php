@@ -19,7 +19,7 @@ class WalletServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->bind(WalletMessageRepository::class, function (Application $application) {
+        $this->app->bind(WalletMessageRepository::class, function (Application $application){
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
                 tableName: 'wallet_messages',
