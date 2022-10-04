@@ -8,7 +8,10 @@ use League\Tactician\CommandBus;
 use PHPUnit\Framework\TestCase;
 use Workshop\Domains\ProcessManager\ProcessHeaders;
 use Workshop\Domains\ProcessManager\ProcessManager;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
+use Workshop\Domains\Wallet\Events\TokensDeposited;
+use Workshop\Domains\Wallet\Events\TokensWithdrawn;
 use Workshop\Domains\Wallet\Events\TransferInitiated;
 use Workshop\Domains\Wallet\Transactions\DefaultTransactionProcessManager;
 use Workshop\Domains\Wallet\Transactions\TransactionId;
@@ -57,6 +60,19 @@ class DefaultTransactionProcessManagerTest extends TestCase
             });
     }
 
+    /** @test */
+    public function it_will_deposit_tokens_after_tokens_withdrawn()
+    {
+        $this
+            ->given($this->getTransferInitiatedMessage())
+            ->when($this->getTokensWithdrawn())
+            ->then(function (){
+                $this->commandBus->assertDispatched(
+                    new DepositTokens(walletId: $this->creditWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId)
+                );
+            });
+    }
+
     private function processManager(): ProcessManager
     {
         return new DefaultTransactionProcessManager($this->commandBus);
@@ -78,10 +94,28 @@ class DefaultTransactionProcessManagerTest extends TestCase
         ]);
     }
 
+    private function getTokensWithdrawn(): Message
+    {
+        return (new Message(
+            new TokensWithdrawn(
+                tokens: $this->tokens,
+                description: $this->description,
+                transactedAt: new \DateTimeImmutable(),
+                transactionId: $this->transactionId
+            ),
+        ))->withHeaders([
+            ProcessHeaders::CORRELATION_ID => $this->transactionId->toString(),
+            Header::AGGREGATE_ROOT_ID => $this->debtorWalletId,
+        ]);
+    }
+
     private function given(Message ...$messages): self
     {
         foreach ($messages as $message){
             $this->processManager->handle($message);
+        }
+        if(count($messages) > 0){
+            $this->reloadProcessManager();
         }
         return $this;
     }
@@ -91,6 +125,9 @@ class DefaultTransactionProcessManagerTest extends TestCase
         foreach ($messages as $message){
             $this->processManager->handle($message);
         }
+        if(count($messages) > 0){
+            $this->reloadProcessManager();
+        }
         return $this;
     }
 
@@ -98,4 +135,13 @@ class DefaultTransactionProcessManagerTest extends TestCase
     {
         $param();
     }
+
+    private function reloadProcessManager()
+    {
+        $processManager = $this->processManager();
+        $processManager->fromPayload($this->processManager->toPayload());
+        $this->processManager = $processManager;
+    }
+
+
 }

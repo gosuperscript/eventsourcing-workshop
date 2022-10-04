@@ -8,7 +8,9 @@ use EventSauce\EventSourcing\EventConsumption\InflectHandlerMethodsFromType;
 use EventSauce\EventSourcing\Message;
 use League\Tactician\CommandBus;
 use Workshop\Domains\ProcessManager\ProcessManager;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
+use Workshop\Domains\Wallet\Events\TokensWithdrawn;
 use Workshop\Domains\Wallet\Events\TransferInitiated;
 use Workshop\Domains\Wallet\WalletId;
 
@@ -39,6 +41,11 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
         $this->description = $transferInitiated->description;
 
         $this->commandBus->handle(new WithdrawTokens(walletId: $this->debtorWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
+    }
+
+    public function afterTokensWithdrawn(TokensWithdrawn $tokensWithdrawn, Message $message): void
+    {
+        $this->commandBus->handle(new DepositTokens(walletId: $this->receivingWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
     }
 
     public function toPayload(): array
