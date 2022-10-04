@@ -18,7 +18,7 @@ class ProcessManagerReactor implements MessageConsumer
 
     public function handle(Message $message): void
     {
-        $correlationId = $message->header(RelationHeaders::CORRELATION_ID);
+        $correlationId = $message->header(ProcessHeaders::CORRELATION_ID);
         if($correlationId === null){
             return;
         }

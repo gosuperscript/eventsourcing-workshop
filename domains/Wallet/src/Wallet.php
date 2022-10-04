@@ -25,7 +25,7 @@ class Wallet implements AggregateRoot
     public function withdraw(int $tokens, string $description, \DateTimeImmutable $transactedAt, ?TransactionId $transactionId = null)
     {
         if($this->tokens < $tokens) {
-            $this->recordThat(WithdrawalFailed::becauseOfInsufficientFunds());
+            $this->recordThat(WithdrawalFailed::becauseOfInsufficientFunds($transactionId));
             throw SorryCantWithdraw::becauseOfInsufficientFunds();
         }
         $this->recordThat(new TokensWithdrawn($tokens, $description, $transactedAt, $transactionId));

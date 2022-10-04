@@ -22,6 +22,7 @@ use League\Tactician\Handler\Locator\InMemoryLocator;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Decorators\EventIDDecorator;
+use Workshop\Domains\Wallet\Decorators\ProcessIdsDecorator;
 use Workshop\Domains\Wallet\Decorators\RandomNumberHeaderDecorator;
 use Workshop\Domains\Wallet\Infra\EloquentTransactionsReadModelRepository;
 use Workshop\Domains\Wallet\Infra\IlluminateWalletBalanceRepository;
@@ -77,7 +78,8 @@ class WalletServiceProvider extends ServiceProvider
                 decorator: new MessageDecoratorChain(
                     new EventIDDecorator(),
                     new DefaultHeadersDecorator(inflector: $classNameInflector),
-                    new RandomNumberHeaderDecorator()
+                    new RandomNumberHeaderDecorator(),
+                    new ProcessIdsDecorator(),
                 ),
                 classNameInflector: $classNameInflector,
             );

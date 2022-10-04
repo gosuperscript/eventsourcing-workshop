@@ -3,10 +3,11 @@
 namespace Workshop\Domains\Wallet\Events;
 
 use EventSauce\EventSourcing\Serialization\SerializablePayload;
+use Workshop\Domains\ProcessManager\HasProcessIds;
 use Workshop\Domains\Wallet\Transactions\TransactionId;
 use Workshop\Domains\Wallet\WalletId;
 
-class TransferInitiated implements SerializablePayload
+class TransferInitiated implements SerializablePayload, hasProcessIds
 {
 
     public function __construct(
@@ -38,5 +39,15 @@ class TransferInitiated implements SerializablePayload
             $payload['description'],
             \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $payload['started_at']),
         );
+    }
+
+    public function getCorrelationId(): ?string
+    {
+        return $this->transactionId->toString();
+    }
+
+    public function getCausationId(): ?string
+    {
+        return null;
     }
 }

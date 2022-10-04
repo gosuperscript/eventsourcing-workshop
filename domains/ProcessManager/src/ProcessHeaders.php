@@ -2,7 +2,7 @@
 
 namespace Workshop\Domains\ProcessManager;
 
-class RelationHeaders
+class ProcessHeaders
 {
 
     public const CORRELATION_ID = 'correlation_id';
