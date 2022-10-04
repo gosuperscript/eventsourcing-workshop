@@ -3,7 +3,6 @@
 namespace Workshop\Domains\FraudDetection;
 
 
-use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use Workshop\Domains\FraudDetection\Commands\ApproveTransaction;
 use Workshop\Domains\FraudDetection\Commands\RejectTransaction;
@@ -45,7 +44,7 @@ class FraudCommandHandler
             throw new \Exception("transaction already approved or rejected");
         }
         $detection->update([
-            'approved_at' => now(),
+            'rejected_at' => now(),
         ]);
 
 

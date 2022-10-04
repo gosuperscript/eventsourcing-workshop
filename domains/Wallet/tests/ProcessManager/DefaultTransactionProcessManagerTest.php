@@ -5,9 +5,9 @@ namespace Workshop\Domains\Wallet\Tests\ProcessManager;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use League\Tactician\CommandBus;
-use PHPUnit\Framework\TestCase;
 use Workshop\Domains\ProcessManager\ProcessHeaders;
 use Workshop\Domains\ProcessManager\ProcessManager;
+use Workshop\Domains\ProcessManager\ProcessManagerTestCase;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Events\TokensDeposited;
@@ -17,7 +17,7 @@ use Workshop\Domains\Wallet\Transactions\DefaultTransactionProcessManager;
 use Workshop\Domains\Wallet\Transactions\TransactionId;
 use Workshop\Domains\Wallet\WalletId;
 
-class DefaultTransactionProcessManagerTest extends TestCase
+class DefaultTransactionProcessManagerTest extends ProcessManagerTestCase
 {
     private TransactionId $transactionId;
     private WalletId $debtorWalletId;
@@ -35,7 +35,6 @@ class DefaultTransactionProcessManagerTest extends TestCase
         $this->description = 'test';
         $this->tokens = 99;
         $this->commandBus = new FakeCommandBus();
-        $this->processManager = $this->processManager();
         parent::setUp();
     }
 
@@ -43,8 +42,7 @@ class DefaultTransactionProcessManagerTest extends TestCase
     public function it_should_start_on_transfer_initiated()
     {
         $transferInitiatedMessage = $this->getTransferInitiatedMessage();
-        $processManager = $this->processManager();
-        $this->assertTrue($processManager->startsOn($transferInitiatedMessage));
+        $this->assertTrue($this->processManager->startsOn($transferInitiatedMessage));
     }
 
     /** @test */
@@ -73,7 +71,7 @@ class DefaultTransactionProcessManagerTest extends TestCase
             });
     }
 
-    private function processManager(): ProcessManager
+    protected function processManager(): ProcessManager
     {
         return new DefaultTransactionProcessManager($this->commandBus);
     }
@@ -107,40 +105,6 @@ class DefaultTransactionProcessManagerTest extends TestCase
             ProcessHeaders::CORRELATION_ID => $this->transactionId->toString(),
             Header::AGGREGATE_ROOT_ID => $this->debtorWalletId,
         ]);
-    }
-
-    private function given(Message ...$messages): self
-    {
-        foreach ($messages as $message){
-            $this->processManager->handle($message);
-        }
-        if(count($messages) > 0){
-            $this->reloadProcessManager();
-        }
-        return $this;
-    }
-
-    private function when(Message ...$messages): self
-    {
-        foreach ($messages as $message){
-            $this->processManager->handle($message);
-        }
-        if(count($messages) > 0){
-            $this->reloadProcessManager();
-        }
-        return $this;
-    }
-
-    private function then(\Closure $param)
-    {
-        $param();
-    }
-
-    private function reloadProcessManager()
-    {
-        $processManager = $this->processManager();
-        $processManager->fromPayload($this->processManager->toPayload());
-        $this->processManager = $processManager;
     }
 
 
