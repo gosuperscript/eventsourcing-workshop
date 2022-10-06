@@ -1,6 +1,8 @@
 <?php
 
+use App\Providers\CommandBusServiceProvider;
 use Illuminate\Support\Facades\Facade;
+use Workshop\Domains\FraudDetection\FraudServiceProvider;
 
 return [
 
@@ -181,11 +183,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        CommandBusServiceProvider::class,
         /*
          * Package Service Providers...
          */
         \Workshop\Domains\Wallet\WalletServiceProvider::class,
+        FraudServiceProvider::class,
         /*
          * Application Service Providers...
          */

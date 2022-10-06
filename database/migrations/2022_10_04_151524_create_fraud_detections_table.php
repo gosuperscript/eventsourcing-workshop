@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('wallet_balance', function (Blueprint $table) {
-            $table->uuid('wallet_id')->primary();
+        Schema::create('fraud_detections', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('transaction_id');
             $table->integer('tokens');
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('rejected_at')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('wallet_balance');
+        Schema::dropIfExists('fraud_detections');
     }
 };
