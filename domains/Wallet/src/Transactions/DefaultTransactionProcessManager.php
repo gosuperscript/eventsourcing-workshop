@@ -26,7 +26,9 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
 
     public function startsOn(Message $message): bool
     {
-        return $message->payload() instanceof TransferInitiated;
+        $event = $message->payload();
+
+        return $event instanceof TransferInitiated && $event->tokens < 100;
     }
 
     public function withdrawFromDebtor(TransferInitiated $event, Message $message): void
