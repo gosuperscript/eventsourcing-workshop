@@ -16,15 +16,12 @@ use Workshop\Domains\Wallet\WalletId;
 
 class DefaultTransactionProcessManager extends EventConsumer implements ProcessManager
 {
-    private TransactionId $transactionId;
-    private WalletId $debtorWalletId;
     private WalletId $receivingWalletId;
-    private int $tokens;
-    private string $description;
 
-    public function __construct(CommandBus $commandBus)
+    public function __construct(
+        private readonly CommandBus $commandBus,
+    )
     {
-        $this->commandBus = $commandBus;
     }
 
     public function startsOn(Message $message): bool
@@ -32,40 +29,38 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
         return $message->payload() instanceof TransferInitiated;
     }
 
-    public function whenATransferStarts(TransferInitiated $transferInitiated, Message $message): void
+    public function withdrawFromDebtor(TransferInitiated $event, Message $message): void
     {
-        $this->transactionId = $transferInitiated->transactionId;
-        $this->debtorWalletId = $message->aggregateRootId();
-        $this->receivingWalletId = $transferInitiated->receivingWalletId;
-        $this->tokens = $transferInitiated->tokens;
-        $this->description = $transferInitiated->description;
+        $this->receivingWalletId = $event->receivingWalletId;
 
-        $this->commandBus->handle(new WithdrawTokens(walletId: $this->debtorWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
+        $this->commandBus->handle(new WithdrawTokens(
+            walletId: WalletId::fromString($message->aggregateRootId()->toString()),
+            tokens: $event->tokens,
+            description: $event->description,
+            transactionId: $event->transactionId,
+        ));
     }
 
-    public function afterTokensWithdrawn(TokensWithdrawn $tokensWithdrawn, Message $message): void
+    public function depositToCreditor(TokensWithdrawn $event, Message $message): void
     {
-        $this->commandBus->handle(new DepositTokens(walletId: $this->receivingWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
+        $this->commandBus->handle(new DepositTokens(
+            walletId: $this->receivingWalletId,
+            tokens: $event->tokens,
+            description: $event->description,
+            transactionId: $event->transactionId,
+        ));
     }
 
     public function toPayload(): array
     {
         return [
-            'transaction_id' => $this->transactionId->toString(),
-            'debtor_wallet_id' => $this->debtorWalletId->toString(),
             'receiving_wallet_id' => $this->receivingWalletId->toString(),
-            'tokens' => $this->tokens,
-            'description' => $this->description,
         ];
     }
 
     public function fromPayload(array $payload): void
     {
-        $this->transactionId = TransactionId::fromString($payload['transaction_id']);
-        $this->debtorWalletId = WalletId::fromString($payload['debtor_wallet_id']);
         $this->receivingWalletId = WalletId::fromString($payload['receiving_wallet_id']);
-        $this->tokens = $payload['tokens'];
-        $this->description = $payload['description'];
     }
 
     public function handleMethodInflector(): HandleMethodInflector

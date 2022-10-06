@@ -2,6 +2,7 @@
 
 namespace Workshop\Domains\Wallet\Tests\ProcessManager;
 
+use Carbon\Carbon;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use League\Tactician\CommandBus;
@@ -25,7 +26,6 @@ class DefaultTransactionProcessManagerTest extends ProcessManagerTestCase
     private string $description;
     private int $tokens;
     private CommandBus $commandBus;
-    private ProcessManager $processManager;
 
     public function setUp(): void
     {
@@ -84,7 +84,7 @@ class DefaultTransactionProcessManagerTest extends ProcessManagerTestCase
                 receivingWalletId: $this->creditWalletId,
                 tokens: $this->tokens,
                 description: $this->description,
-                startedAt: new \DateTimeImmutable()
+                startedAt: Carbon::now(),
             ),
         ))->withHeaders([
             ProcessHeaders::CORRELATION_ID => $this->transactionId->toString(),
@@ -97,15 +97,13 @@ class DefaultTransactionProcessManagerTest extends ProcessManagerTestCase
         return (new Message(
             new TokensWithdrawn(
                 tokens: $this->tokens,
-                description: $this->description,
-                transactedAt: new \DateTimeImmutable(),
-                transactionId: $this->transactionId
+                transactedAt: Carbon::now(),
+                transactionId: $this->transactionId,
+                description: $this->description
             ),
         ))->withHeaders([
             ProcessHeaders::CORRELATION_ID => $this->transactionId->toString(),
             Header::AGGREGATE_ROOT_ID => $this->debtorWalletId,
         ]);
     }
-
-
 }

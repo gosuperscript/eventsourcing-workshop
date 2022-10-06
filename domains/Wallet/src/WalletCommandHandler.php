@@ -2,6 +2,7 @@
 
 namespace Workshop\Domains\Wallet;
 
+use Carbon\Carbon;
 use EventSauce\Clock\Clock;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
@@ -22,7 +23,7 @@ class WalletCommandHandler
         $wallet->withdraw(
             $withdrawTokens->tokens,
             $withdrawTokens->description,
-            $this->clock->now(),
+            Carbon::parse($this->clock->now()),
             $withdrawTokens->transactionId
         );
         $this->walletRepository->persist($wallet);
@@ -34,7 +35,7 @@ class WalletCommandHandler
         $wallet->deposit(
             $depositTokens->tokens,
             $depositTokens->description,
-            $this->clock->now(),
+            Carbon::parse($this->clock->now()),
             $depositTokens->transactionId
         );
         $this->walletRepository->persist($wallet);

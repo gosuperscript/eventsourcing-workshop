@@ -8,7 +8,7 @@ use PHPUnit\Framework\Assert;
 class FakeCommandBus extends CommandBus
 {
 
-    private array $commands;
+    private array $commands = [];
 
     public function __construct()
     {

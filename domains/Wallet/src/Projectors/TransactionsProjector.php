@@ -29,7 +29,7 @@ final class TransactionsProjector extends EventConsumer implements TriggerBefore
             eventId: $message->headers()[Header::EVENT_ID],
             walletId: $message->aggregateRootId()->toString(),
             amount: $event->tokens,
-            transactedAt: $event->transacted_at,
+            transactedAt: $event->transactedAt,
             description: $event->description,
         );
     }
@@ -40,7 +40,7 @@ final class TransactionsProjector extends EventConsumer implements TriggerBefore
             eventId: $message->headers()[Header::EVENT_ID],
             walletId: $message->aggregateRootId()->toString(),
             amount: -$event->tokens,
-            transactedAt: $event->transacted_at,
+            transactedAt: $event->transactedAt,
             description: $event->description,
         );
     }

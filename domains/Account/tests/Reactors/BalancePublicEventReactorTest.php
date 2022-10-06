@@ -16,6 +16,7 @@ use Workshop\Domains\Wallet\Infra\WalletBalanceRepository;
 use Workshop\Domains\Wallet\PublicEvents\Balance\Balance;
 use Workshop\Domains\Wallet\Reactors\BalancePublicEventReactor;
 use Workshop\Domains\Wallet\Tests\InMemoryWalletBalanceRepository;
+use Workshop\Domains\Wallet\Transactions\TransactionId;
 use Workshop\Domains\Wallet\WalletId;
 
 class BalancePublicEventReactorTest extends MessageConsumerTestCase
@@ -37,7 +38,7 @@ class BalancePublicEventReactorTest extends MessageConsumerTestCase
         $this->givenNextMessagesHaveAggregateRootIdOf($walletId)
             ->when(new TokensDeposited(
                 tokens: 100,
-                transacted_at: now(),
+                transactedAt: now(),
             ))->then(function () use ($balance) {
                 /** @var RawMessage[] $messages */
                 $messages = $this->messageRepository->getMessagesForTopic((new Balance())->getName(), new IncrementalCursor())->messages;

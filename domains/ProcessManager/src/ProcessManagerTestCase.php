@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class ProcessManagerTestCase extends TestCase
 {
-    private ProcessManager $processManager;
+    protected ProcessManager $processManager;
 
     public function setUp(): void
     {
