@@ -3,8 +3,10 @@
 namespace App\Console\Commands;
 
 use Assert\Assert;
-use EventSauce\Clock\Clock;
 use Illuminate\Console\Command;
+use League\Tactician\CommandBus;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\WalletId;
@@ -30,7 +32,7 @@ class Wallet extends Command
      *
      * @return int
      */
-    public function handle(WalletRepository $walletRepository, Clock $clock)
+    public function handle(CommandBus $commandBus, WalletRepository $walletRepository)
     {
         $action = $this->choice(
             'Deposit or withdraw?',
@@ -45,18 +47,15 @@ class Wallet extends Command
         $tokens = (int) $this->ask("amount of tokens?");
         Assert::that($tokens)->integer()->greaterThan(0);
 
-        $wallet = $walletRepository->retrieve($walletId);
         try {
             if($action === 'Deposit'){
-                $wallet->deposit($tokens, $this->ask("description?"), $clock->now());
+                $commandBus->handle(new DepositTokens($walletId, $tokens, $this->ask("description?")));
             } else {
-                $wallet->withdraw($tokens, $this->ask("description?"), $clock->now());
+                $commandBus->handle(new WithdrawTokens($walletId, $tokens, $this->ask("description?")));
             }
         } catch (SorryCantWithdraw $exception) {
             $this->error($exception->getMessage());
             return 1;
-        } finally {
-            $walletRepository->persist($wallet);
         }
 
         $this->info("✅ Tokens successfully {$action}d, to wallet {$walletId->toString()}");

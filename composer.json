@@ -35,6 +35,8 @@
             "Workshop\\Domains\\Wallet\\Infra\\": "domains/Wallet/infra/",
             "Workshop\\Domains\\Accounts\\": "domains/Account/src/",
             "Workshop\\Domains\\Accounts\\Infra\\": "domains/Account/infra/",
+            "Workshop\\Domains\\ProcessManager\\": "domains/ProcessManager/src/",
+            "Workshop\\Domains\\FraudDetection\\": "domains/FraudDetection/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }

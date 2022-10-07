@@ -185,7 +185,9 @@ return [
         /*
          * Package Service Providers...
          */
+        \App\Providers\CommandBusServiceProvider::class,
         \Workshop\Domains\Wallet\WalletServiceProvider::class,
+        \Workshop\Domains\FraudDetection\FraudServiceProvider::class,
         /*
          * Application Service Providers...
          */
