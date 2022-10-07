@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire;
 
+use League\Tactician\CommandBus;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\ReadModels\Transaction;
 use Livewire\Component;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
@@ -25,23 +28,27 @@ class Transactions extends Component
         $this->walletId = $walletId;
     }
 
-    public function deposit(WalletRepository $walletRepository)
+    public function deposit(CommandBus $commandBus)
     {
 
-        $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->deposit($this->tokens, $this->description);
-        $walletRepository->persist($wallet);
+        $commandBus->handle(new DepositTokens(
+            walletId: WalletId::fromString($this->walletId),
+            tokens: $this->tokens,
+            description: $this->description
+        ));
 
         $this->tokens = 0;
         $this->description = '';
         session()->flash('success', 'Money successfully deposited.');
     }
 
-    public function withdraw(WalletRepository $walletRepository)
+    public function withdraw(CommandBus $commandBus)
     {
-        $wallet = $walletRepository->retrieve(WalletId::fromString($this->walletId));
-        $wallet->withdraw($this->tokens, $this->description);
-        $walletRepository->persist($wallet);
+        $commandBus->handle(new WithdrawTokens(
+            walletId: WalletId::fromString($this->walletId),
+            tokens: $this->tokens,
+            description: $this->description
+        ));
 
         $this->tokens = 0;
         $this->description = '';

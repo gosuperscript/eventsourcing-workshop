@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use Assert\Assert;
 use Illuminate\Console\Command;
+use League\Tactician\CommandBus;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Exceptions\SorryCantWithdraw;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 use Workshop\Domains\Wallet\WalletId;
@@ -29,7 +32,7 @@ class Wallet extends Command
      *
      * @return int
      */
-    public function handle(WalletRepository $walletRepository)
+    public function handle(CommandBus $commandBus, WalletRepository $walletRepository)
     {
         $action = $this->choice(
             'Deposit or withdraw?',
@@ -47,9 +50,9 @@ class Wallet extends Command
         $wallet = $walletRepository->retrieve($walletId);
         try {
             if($action === 'Deposit'){
-                $wallet->deposit($tokens, $this->ask("description?"));
+                $commandBus->handle(new DepositTokens($walletId, $tokens, $this->ask("description?")));
             } else {
-                $wallet->withdraw($tokens, $this->ask("description?"));
+                $commandBus->handle(new WithdrawTokens($walletId, $tokens, $this->ask("description?")));
             }
         } catch (SorryCantWithdraw $exception) {
             $this->error($exception->getMessage());

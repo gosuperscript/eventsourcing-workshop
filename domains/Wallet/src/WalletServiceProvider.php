@@ -11,6 +11,9 @@ use EventSauce\UuidEncoding\BinaryUuidEncoder;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use League\Tactician\Handler\Locator\InMemoryLocator;
+use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Infra\WalletMessageRepository;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 
@@ -37,5 +40,10 @@ class WalletServiceProvider extends ServiceProvider
                 new DotSeparatedSnakeCaseInflector(),
             );
         });
+
+        /** @var InMemoryLocator $locator */
+        $locator = $this->app->make(InMemoryLocator::class);
+        $locator->addHandler($this->app->make(WalletCommandHandler::class), WithdrawTokens::class);
+        $locator->addHandler($this->app->make(WalletCommandHandler::class), DepositTokens::class);
     }
 }
