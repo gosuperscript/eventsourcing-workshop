@@ -11,7 +11,7 @@ use Workshop\Domains\ProcessManager\ProcessManager;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Events\TokensWithdrawn;
-use Workshop\Domains\Wallet\Events\TransferInitiated;
+use Workshop\Domains\Wallet\Transactions\Events\TransferInitiated;
 use Workshop\Domains\Wallet\WalletId;
 
 class DefaultTransactionProcessManager extends EventConsumer implements ProcessManager

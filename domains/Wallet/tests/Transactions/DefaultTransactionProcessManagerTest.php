@@ -10,10 +10,9 @@ use Workshop\Domains\ProcessManager\ProcessManager;
 use Workshop\Domains\ProcessManager\ProcessManagerTestCase;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
-use Workshop\Domains\Wallet\Events\TokensDeposited;
 use Workshop\Domains\Wallet\Events\TokensWithdrawn;
-use Workshop\Domains\Wallet\Events\TransferInitiated;
 use Workshop\Domains\Wallet\Transactions\DefaultTransactionProcessManager;
+use Workshop\Domains\Wallet\Transactions\Events\TransferInitiated;
 use Workshop\Domains\Wallet\Transactions\TransactionId;
 use Workshop\Domains\Wallet\WalletId;
 
