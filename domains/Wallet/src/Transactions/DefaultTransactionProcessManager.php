@@ -72,4 +72,9 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
     {
         return new InflectHandlerMethodsFromType();
     }
+
+    public function getProcessId(): string
+    {
+        return $this->transactionId->toString();
+    }
 }

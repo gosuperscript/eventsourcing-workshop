@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Facade;
+use Workshop\Domains\ProcessManager\ProcessManagerServiceProvider;
 
 return [
 
@@ -186,6 +187,7 @@ return [
          * Package Service Providers...
          */
         \App\Providers\CommandBusServiceProvider::class,
+        ProcessManagerServiceProvider::class,
         \Workshop\Domains\Wallet\WalletServiceProvider::class,
         \Workshop\Domains\FraudDetection\FraudServiceProvider::class,
         /*

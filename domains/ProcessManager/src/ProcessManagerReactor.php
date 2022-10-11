@@ -10,10 +10,8 @@ class ProcessManagerReactor implements MessageConsumer
 {
     public function __construct(
         private ProcessManagerRepository $processManagerRepository,
-        private array $processManagers
     )
     {
-        Assert::thatAll($this->processManagers)->isInstanceOf(ProcessManager::class);
     }
 
     public function handle(Message $message): void
@@ -31,7 +29,7 @@ class ProcessManagerReactor implements MessageConsumer
         }
 
         /** @var ProcessManager $processManager */
-        foreach ($this->processManagers as $processManager){
+        foreach ($this->processManagerRepository->getProcessManagers() as $processManager){
             if(!$processManager->startsOn($message)){
                continue;
             }
