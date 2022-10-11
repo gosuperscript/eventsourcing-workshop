@@ -25,6 +25,7 @@ class ProcessManagerReactor implements MessageConsumer
         if($processManager !== null){
             $processManager->handle($message);
             $this->processManagerRepository->persist($processManager);
+            $processManager->releaseCommands();
             return;
         }
 
@@ -35,6 +36,7 @@ class ProcessManagerReactor implements MessageConsumer
             }
             $processManager->handle($message);
             $this->processManagerRepository->persist($processManager);
+            $processManager->releaseCommands();
             break;
         }
     }

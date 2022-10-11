@@ -18,9 +18,12 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use League\Tactician\Handler\Locator\InMemoryLocator;
+use Workshop\Domains\ProcessManager\ProcessManagerReactor;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\TransferTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Decorators\EventIDDecorator;
+use Workshop\Domains\Wallet\Decorators\ProcessIdsDecorator;
 use Workshop\Domains\Wallet\Decorators\RandomNumberHeaderDecorator;
 use Workshop\Domains\Wallet\Infra\EloquentTransactionsReadModelRepository;
 use Workshop\Domains\Wallet\Infra\IlluminateWalletBalanceRepository;
@@ -47,8 +50,6 @@ class WalletServiceProvider extends ServiceProvider
         // This should live in a config file.
         $classNameInflector = new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
 
-        $this->app->singleton(BalanceUpcaster::class, fn(Application $app) => new BalanceUpcaster());
-
         $this->app->bind(WalletMessageRepository::class, function (Application $application) use ($classNameInflector) {
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
@@ -58,8 +59,7 @@ class WalletServiceProvider extends ServiceProvider
                         classNameInflector: $classNameInflector
                     ),
                     upcaster: new UpcasterChain(
-                         new TransactedAtUpcaster(),
-                        $application->make(BalanceUpcaster::class)
+                         new TransactedAtUpcaster()
                     )
                 ),
                 tableSchema: new DefaultTableSchema(),
@@ -74,12 +74,14 @@ class WalletServiceProvider extends ServiceProvider
                     new SynchronousMessageDispatcher(
                         $this->app->make(TransactionsProjector::class),
                         $this->app->make(WalletBalanceProjector::class),
+                        $this->app->make(ProcessManagerReactor::class),
                     )
                 ),
                 decorator: new MessageDecoratorChain(
                     new EventIDDecorator(),
                     new DefaultHeadersDecorator(inflector: $classNameInflector),
-                    new RandomNumberHeaderDecorator()
+                    new RandomNumberHeaderDecorator(),
+                    new ProcessIdsDecorator()
                 ),
                 classNameInflector: $classNameInflector,
             );
@@ -89,5 +91,6 @@ class WalletServiceProvider extends ServiceProvider
         $locator = $this->app->make(InMemoryLocator::class);
         $locator->addHandler($this->app->make(WalletCommandHandler::class), WithdrawTokens::class);
         $locator->addHandler($this->app->make(WalletCommandHandler::class), DepositTokens::class);
+        $locator->addHandler($this->app->make(WalletCommandHandler::class), TransferTokens::class);
     }
 }

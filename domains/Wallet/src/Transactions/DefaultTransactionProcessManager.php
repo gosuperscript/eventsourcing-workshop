@@ -21,6 +21,7 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
     private WalletId $receivingWalletId;
     private int $tokens;
     private string $description;
+    private array $commands = [];
 
     public function __construct(CommandBus $commandBus)
     {
@@ -40,12 +41,20 @@ class DefaultTransactionProcessManager extends EventConsumer implements ProcessM
         $this->tokens = $transferInitiated->tokens;
         $this->description = $transferInitiated->description;
 
-        $this->commandBus->handle(new WithdrawTokens(walletId: $this->debtorWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
+        $this->commands[] = new WithdrawTokens(walletId: $this->debtorWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId);
     }
 
     public function afterTokensWithdrawn(TokensWithdrawn $tokensWithdrawn, Message $message): void
     {
-        $this->commandBus->handle(new DepositTokens(walletId: $this->receivingWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId));
+        $this->commands[] = new DepositTokens(walletId: $this->receivingWalletId, tokens: $this->tokens, description: $this->description, transactionId: $this->transactionId);
+    }
+
+    public function releaseCommands(): void
+    {
+        foreach ($this->commands as $command) {
+            $this->commandBus->handle($command);
+        }
+        $this->commands = [];
     }
 
     public function toPayload(): array

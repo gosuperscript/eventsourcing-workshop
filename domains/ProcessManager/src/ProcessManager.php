@@ -16,4 +16,7 @@ interface ProcessManager extends MessageConsumer
     public function toPayload(): array;
 
     public function fromPayload(array $payload): void;
+
+    // we need to do this, since commands are handled sync
+    public function releaseCommands(): void;
 }

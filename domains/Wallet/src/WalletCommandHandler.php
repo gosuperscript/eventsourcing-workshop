@@ -4,6 +4,7 @@ namespace Workshop\Domains\Wallet;
 
 use EventSauce\Clock\Clock;
 use Workshop\Domains\Wallet\Commands\DepositTokens;
+use Workshop\Domains\Wallet\Commands\TransferTokens;
 use Workshop\Domains\Wallet\Commands\WithdrawTokens;
 use Workshop\Domains\Wallet\Infra\WalletRepository;
 
@@ -14,6 +15,13 @@ class WalletCommandHandler
         private Clock $clock,
     )
     {
+    }
+
+    public function handleTransferTokens(TransferTokens $transferTokens): void
+    {
+        $wallet = $this->walletRepository->retrieve($transferTokens->sendingWalletId);
+        $wallet->transfer($transferTokens, $this->clock->now());
+        $this->walletRepository->persist($wallet);
     }
 
     public function handleWithdrawTokens(WithdrawTokens $withdrawTokens): void
