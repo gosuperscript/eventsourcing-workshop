@@ -22,6 +22,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
+    Route::get('fraud-detection', \App\Http\Livewire\FraudDetection::class)->name('fraud-detection');
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
