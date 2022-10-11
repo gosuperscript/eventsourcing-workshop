@@ -31,7 +31,6 @@ class Transactions extends Component
 
     public function deposit(CommandBus $commandBus, Clock $clock)
     {
-
         $commandBus->handle(new DepositTokens(
             walletId: WalletId::fromString($this->walletId),
             tokens: $this->tokens,
