@@ -8,6 +8,9 @@ use EventSauce\EventSourcing\Serialization\SerializablePayload;
 
 interface ProcessManager extends MessageConsumer
 {
+
+    public function getProcessId(): string;
+
     public function startsOn(Message $message): bool;
 
     public function toPayload(): array;

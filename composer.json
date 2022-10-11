@@ -45,7 +45,8 @@
         "psr-4": {
             "Tests\\": "tests/",
             "Workshop\\Domains\\Accounts\\Tests\\": "domains/Account/tests/",
-            "Workshop\\Domains\\Wallet\\Tests\\": "domains/Wallet/tests/"
+            "Workshop\\Domains\\Wallet\\Tests\\": "domains/Wallet/tests/",
+            "Workshop\\Domains\\ProcessManager\\Tests\\": "domains/ProcessManager/tests/"
         }
     },
     "scripts": {
