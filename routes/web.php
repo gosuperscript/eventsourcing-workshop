@@ -24,6 +24,7 @@ Route::middleware([
     'verified'
 ])->group(function () {
     Route::get('transactions/{walletId}', \App\Http\Livewire\Transactions::class)->name('transactions');
+    Route::get('transfer', \App\Http\Livewire\Transfer::class)->name('transfer');
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
