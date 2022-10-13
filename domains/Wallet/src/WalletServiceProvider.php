@@ -45,8 +45,6 @@ class WalletServiceProvider extends ServiceProvider
         // This should live in a config file.
         $classNameInflector = new ExplicitlyMappedClassNameInflector(config('eventsourcing.class_map'));
 
-        $this->app->singleton(BalanceUpcaster::class, fn(Application $app) => new BalanceUpcaster());
-
         $this->app->bind(WalletMessageRepository::class, function (Application $application) use ($classNameInflector) {
             return new WalletMessageRepository(
                 connection: $application->make(DatabaseManager::class)->connection(),
@@ -56,8 +54,7 @@ class WalletServiceProvider extends ServiceProvider
                         classNameInflector: $classNameInflector
                     ),
                     upcaster: new UpcasterChain(
-                         new TransactedAtUpcaster(),
-                        $application->make(BalanceUpcaster::class)
+                         new TransactedAtUpcaster()
                     )
                 ),
                 tableSchema: new DefaultTableSchema(),
